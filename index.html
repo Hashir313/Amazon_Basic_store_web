@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <title>Ajax Crud</title>
+    </head>
+
+    <body>
+        <nav id="navbar">
+            <div class="logo">
+                <img src="amazon_logo.png" alt="logo" width="150px" />
+            </div>
+            <ul id="navMenu">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Categories</a></li>
+                <li><a href="#">Latest</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">About Us</a></li>
+            </ul>
+        </nav>
+        <section class="Mainbody">
+            <h1>Shop Setting</h1>
+            <form id="productForm" <label for="productId" , style="color: white;">Product Id:</label>
+                <input type="number" name="productId" id="productId" />
+                <br />
+                <br />
+                <label for="productName">Product Name:</label>
+                <input type="text" name="productName" id="productName" />
+                <br />
+                <br />
+                <label for="ProductDescription">Product Description</label><br />
+                <textarea name="ProductDescription" id="ProductDescription" cols="70" rows="5"></textarea>
+                <br />
+                <br />
+                <input type="submit" value="Add Product" class="Btn" />
+                <!-- <button type="submit">Add Product</button> -->
+                <input type="button" value="Update Product" id="updateBtn" class="Btn" />
+                <input type="button" value="Delete Product" id="deleteBtn" class="Btn" />
+            </form>
+            <div id="productList" style="padding-top: 30px"></div>
+        </section>
+        <script>
+            function fetchProducts() {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "show_all_products.php", true);
+                xhr.onload = function () {
+                    if (xhr.status == 200) {
+                        console.log(xhr.responseText);
+                        document.getElementById("productList").innerHTML =
+                            xhr.responseText;
+                    } else {
+                        console.log("error fetching product");
+                    }
+                };
+                xhr.send();
+            }
+            document.getElementById("productForm").addEventListener("submit", function (event) {
+                event.preventDefault();
+                var fromData = new FormData(this);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "add_items.php", true);
+                xhr.onload = function () {
+                    if (xhr.status == 200) {
+                        alert(xhr.responseText);
+                        document.getElementById("productForm").reset();
+                        fetchProducts();
+                    } else {
+                        console.log("Error while adding prodcuts");
+                    }
+                };
+                xhr.send(fromData);
+            });
+            document.getElementById("updateBtn").addEventListener("click", function () {
+                var formData = new FormData(document.getElementById("productForm"));
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "update_products.php", true);
+                xhr.onload = function () {
+                    if (xhr.status == 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            alert(response.message);
+                            document.getElementById("productForm").reset();
+                            fetchProducts(); // Refresh product list after updating
+                        } else {
+                            alert(response.message); // Display error message from PHP
+                        }
+                    } else {
+                        console.error("Error updating product");
+                    }
+                };
+                xhr.send(formData);
+            });
+            document.getElementById("deleteBtn").addEventListener("click", function () {
+                var productId = document.getElementById("productId").value;
+                if (confirm("Are you sure you want to delete this product?")) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "delete_products.php", true);
+                    xhr.setRequestHeader(
+                        "Content-Type",
+                        "application/x-www-form-urlencoded"
+                    );
+                    xhr.onload = function () {
+                        if (xhr.status == 200) {
+                            var response = JSON.parse(xhr.responseText);
+                            if (response.success) {
+                                alert(response.message);
+                                fetchProducts();
+                            } else {
+                                alert(response.message);
+                            }
+                        } else {
+                            console.error("Error deleting product");
+                        }
+                    };
+                    xhr.send("productId=" + productId);
+                }
+            });
+            fetchProducts();
+        </script>
+    </body>
+
+</html>

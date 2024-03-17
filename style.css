@@ -1,0 +1,66 @@
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+#navbar {
+    background-color: #1E191A;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#navMenu {
+    display: flex;
+    list-style: none;
+}
+
+#navMenu li {
+    padding: 0px 30px;
+}
+
+#navMenu li a {
+    text-decoration: none;
+    color: white;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sansserif;
+}
+
+.Mainbody {
+    max-width: 1100px;
+    padding: 40px;
+    margin: auto;
+    margin-top: 20px;
+    background-color: #232F3E;
+}
+
+form {
+    padding-top: 30px;
+}
+
+h1 {
+    color: white;
+    text-align: center;
+    padding-bottom: 20px;
+
+}
+
+label {
+    color: white;
+    padding-bottom: 10px;
+}
+
+
+.Btn {
+    background-color: #FFCC4A;
+    color: black;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+.Btn:hover {
+    background-color: wheat;
+    cursor: pointer;
+    color: white;
+}
